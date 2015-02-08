@@ -1,56 +1,60 @@
 apply plugin: 'scala'
-apply from: 'integration-test.gradle'
-
-// Adds task run
 apply plugin: 'application'
-mainClassName = 'net.nelanka.sample.main.Main'
+
+ext {
+    scalaVersion = '2.11'
+    scalaMinorVersion = '5'
+}
+
+mainClassName = 'sample.main.Main'
 
 // Jar without external dependencies
 jar {
-  manifest {
-    attributes 'Main-Class': "$mainClassName"
-  }
+    manifest {
+        attributes 'Main-Class': "$mainClassName"
+    }
 }
 
 // Runnable jar with all dependencies
 task fatJar(type: Jar) {
-  manifest {
-    attributes 'Main-Class': "$mainClassName"
-  }
-  baseName = project.name + '-all'
-  from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-  with jar
+    manifest {
+        attributes 'Main-Class': "$mainClassName"
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
 }
 
-repositories{
-    mavenCentral()
+compileScala {
+    scalaCompileOptions.additionalParameters = ['-feature', '-language:implicitConversions', '-Xlint']
+}
+
+repositories {
+    jcenter()
 }
 
 ext {
-	scalaVersion = '2.11'
-	scalaMinorVersion = '5'
-
-  junitVersion = '4.12'
-  scalacticVersion = '2.2.4'
-  scalaCheckVersion = '1.12.1'
+    junitVersion = '4.12'
+    scalacticVersion = '2.2.4'
+    scalaCheckVersion = '1.12.1'
 }
 
 dependencies {
-	compile "org.scala-lang:scala-library:$scalaVersion.$scalaMinorVersion"
-	compile "org.scalactic:scalactic_$scalaVersion:$scalacticVersion"
+    compile "org.scala-lang:scala-library:$scalaVersion.$scalaMinorVersion"
+    compile "org.scalactic:scalactic_$scalaVersion:$scalacticVersion"
 
-  testCompile "junit:junit:$junitVersion"
-  testCompile "org.scalatest:scalatest_$scalaVersion:$scalacticVersion"
-  testCompile "org.scalacheck:scalacheck_$scalaVersion:$scalaCheckVersion"
+    testCompile "junit:junit:$junitVersion"
+    testCompile "org.scalatest:scalatest_$scalaVersion:$scalacticVersion"
+    testCompile "org.scalacheck:scalacheck_$scalaVersion:$scalaCheckVersion"
 }
 
 test {
-  useJUnit()
+    useJUnit()
 
-  testLogging {
-    events "passed", "skipped", "failed"
-  }
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 
-  // always run tests
-  outputs.upToDateWhen { false }
+    // always run tests
+    outputs.upToDateWhen { false }
 }

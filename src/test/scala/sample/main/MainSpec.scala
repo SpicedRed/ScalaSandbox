@@ -1,8 +1,8 @@
-package net.nelanka.sample.main
+package sample.main
 
 import org.scalatest.{FlatSpec, Matchers}
 
-class MainUnitTest extends FlatSpec with Matchers {
+class MainSpec extends FlatSpec with Matchers {
     behavior of "Main"
 
     it should "exist" in {
