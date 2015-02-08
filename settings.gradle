@@ -1,2 +1,2 @@
-rootProject.name = 'sample'
-include 'main'
+rootProject.name = 'sandbox'
+include 'src'

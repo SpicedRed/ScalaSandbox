@@ -6,7 +6,7 @@ ext {
     scalaMinorVersion = '5'
 }
 
-mainClassName = 'sample.main.Main'
+mainClassName = 'sandbox.main.Main'
 
 // Jar without external dependencies
 jar {
